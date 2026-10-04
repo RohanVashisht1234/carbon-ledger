@@ -1,14 +1,14 @@
 # 🌿 CarbonLedger
 
 > **Emissions Accounting & Verifiable Carbon Ledger for a Multi-Plant Automotive Manufacturer**  
-> *Course:* B.Tech CSE (2024–28) · Semester V · **Software Engineering & Project Management (SEPM)**  
-> *Case Study:* **No. 38 — CarbonLedger**
+> *Course:* B.Tech CSE (2024-2028) · Semester V · **Software Engineering & Project Management (SEPM)**  
+> *Case Study:* **No. 38 - CarbonLedger**
 
 ---
 
 ## 📌 Overview
 
-**CarbonLedger** is an enterprise-grade emissions accounting and compliance software system designed for a Tier-1 automotive manufacturing group with **nine operational plants (P1–P9)**. The manufacturer must report verified carbon emissions across **three GHG Scopes** to its key customer (**BMW AG**) as an enforceable supply contract condition.
+**CarbonLedger** is an enterprise-grade emissions accounting and compliance software system designed for a Tier-1 automotive manufacturing group with **nine operational plants (P1-P9)**. The manufacturer must report verified carbon emissions across **three GHG Scopes** to its key customer (**BMW AG**) as an enforceable supply contract condition.
 
 The core engineering challenge is **not calculation, but auditability**:
 > *"A reported emissions figure must be reproducible byte-for-byte two years later from the identical inputs with identical emission factors, even though factor databases are revised annually by publishing authorities (EPA / DEFRA / IPCC)."*
@@ -101,18 +101,9 @@ open index.html
 
 ---
 
-## 🚀 Jira Cloud Project (`CAR`) Backlog Setup
-
-The project management backlog is configured on Atlassian Jira Cloud:
-- **Project Key:** `CAR` (Scrum Board)
-- **8 Epics:** Calculation Engine, Ingestion & Evidence Tiering, Temporal Ref Data, Uncertainty Disclosures, Period Close State Machine, Late Data Pipeline, Audit Verify CLI, Data Quality Framework.
-- **31 Work Items:** Generated via [`populate_scrum_car.py`](populate_scrum_car.py).
-
----
-
 ## 📜 Academic Reference
 
-- **Course:** B.Tech Computer Science & Engineering (2024–2028)
+- **Course:** B.Tech Computer Science & Engineering (2024-2028)
 - **Subject:** Software Engineering & Project Management (Semester V)
-- **Problem Statement:** Case Study No. 38 — CarbonLedger
+- **Problem Statement:** Case Study No. 38 - CarbonLedger
 - **Standards Applied:** IEEE 830, ISO/IEC/IEEE 29148, ISO 14064-1, GHG Protocol Corporate Standard, RFC 8785 (JCS).
