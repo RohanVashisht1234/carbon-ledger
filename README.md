@@ -73,12 +73,12 @@ This repository contains all 6 formal course deliverables:
 
 | Deliverable | File | Key Contents |
 | :--- | :--- | :--- |
-| **1. SRS Document** | [`01_SRS_CarbonLedger.pptx`](01_SRS_CarbonLedger.pptx) | IEEE 830 / ISO 29148 compliant. 18 Functional & 10 Non-Functional Requirements, MoSCoW prioritization, Temporal data rules. |
-| **2. Decision Table & Test Set** | [`02_Decision_Table_and_Test_Set_CarbonLedger.pptx`](02_Decision_Table_and_Test_Set_CarbonLedger.pptx) | 48-rule combinatorial decision matrix, Equivalence Partitioning, Boundary Value Analysis, Pairwise tests. |
-| **3. Design Pack** | [`03_Design_Pack_CarbonLedger.pptx`](03_Design_Pack_CarbonLedger.pptx) | C4 Architecture Model, PostgreSQL Temporal 2-Axis schema, UML Class & Reporting Activity diagrams, RFC 8785 Canonical JSON. |
-| **4. Configuration Management** | [`04_Configuration_Management_Plan_CarbonLedger.pptx`](04_Configuration_Management_Plan_CarbonLedger.pptx) | Joint code/factor versioning ("The Pair"), 6 Formal Baselines (BL-1 to BL-6), Git branching strategy, CCB change control. |
-| **5. Data Quality Plan (DQP)** | [`05_Data_Quality_Plan_CarbonLedger.pptx`](05_Data_Quality_Plan_CarbonLedger.pptx) | 3-Cycle Trajectory shifting Estimated data from 25% down to 5%, Zero-Capex 74% invoice capture rule, Plant-level KPIs. |
-| **6. Project Plan** | [`06_Project_Plan_CarbonLedger.pptx`](06_Project_Plan_CarbonLedger.pptx) | 8 WBS Epics, 31 Work Packages, 10-Sprint Scrum Schedule aligned to contractual delivery, CPM Critical Path, Risk Matrix. |
+| **1. SRS Document** | [`01_SRS_CarbonLedger.pdf`](01_SRS_CarbonLedger.pdf) | IEEE 830 / ISO 29148 compliant. 18 Functional & 10 Non-Functional Requirements, MoSCoW prioritization, Temporal data rules. |
+| **2. Decision Table & Test Set** | [`02_Decision_Table_and_Test_Set_CarbonLedger.pdf`](02_Decision_Table_and_Test_Set_CarbonLedger.pdf) | 48-rule combinatorial decision matrix, Equivalence Partitioning, Boundary Value Analysis, Pairwise tests. |
+| **3. Design Pack** | [`03_Design_Pack_CarbonLedger.pdf`](03_Design_Pack_CarbonLedger.pdf) | C4 Architecture Model, PostgreSQL Temporal 2-Axis schema, UML Class & Reporting Activity diagrams, RFC 8785 Canonical JSON. |
+| **4. Configuration Management** | [`04_Configuration_Management_Plan_CarbonLedger.pdf`](04_Configuration_Management_Plan_CarbonLedger.pdf) | Joint code/factor versioning ("The Pair"), 6 Formal Baselines (BL-1 to BL-6), Git branching strategy, CCB change control. |
+| **5. Data Quality Plan (DQP)** | [`05_Data_Quality_Plan_CarbonLedger.pdf`](05_Data_Quality_Plan_CarbonLedger.pdf) | 3-Cycle Trajectory shifting Estimated data from 25% down to 5%, Zero-Capex 74% invoice capture rule, Plant-level KPIs. |
+| **6. Project Plan** | [`06_Project_Plan_CarbonLedger.pdf`](06_Project_Plan_CarbonLedger.pdf) | 8 WBS Epics, 31 Work Packages, 10-Sprint Scrum Schedule aligned to contractual delivery, CPM Critical Path, Risk Matrix. |
 
 ---
 
