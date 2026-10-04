@@ -1,8 +1,10 @@
 # 🌿 CarbonLedger
 
+### 🌐 Live Demo: [carbon-ledger-rohan.vercel.app](https://carbon-ledger-rohan.vercel.app/)
+
 > **Emissions Accounting & Verifiable Carbon Ledger for a Multi-Plant Automotive Manufacturer**  
 > *Course:* B.Tech CSE (2024-2028) · Semester V · **Software Engineering & Project Management (SEPM)**  
-> *Case Study:* **No. 38 - CarbonLedger**
+> *Case Study:* **No. 38 - CarbonLedger**  
 
 ---
 
@@ -82,12 +84,12 @@ This repository contains all 6 formal course deliverables:
 
 ---
 
-## 💻 Interactive Web Application (`index.html`)
+## 💻 Interactive Web Application
 
-A full interactive single-page application is included in this repository:
+- **Live Deployment:** [https://carbon-ledger-rohan.vercel.app](https://carbon-ledger-rohan.vercel.app/)
+- **Local Browser:** Open `index.html` directly in any modern web browser:
 
 ```bash
-# Simply open in any modern browser:
 open index.html
 ```
 
