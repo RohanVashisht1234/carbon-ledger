@@ -1,6 +1,6 @@
 # 🌿 CarbonLedger
 
-> **Automated Emissions Accounting & Verifiable Carbon Ledger for a Multi-Plant Automotive Manufacturer**  
+> **Emissions Accounting & Verifiable Carbon Ledger for a Multi-Plant Automotive Manufacturer**  
 > *Course:* B.Tech CSE (2024–28) · Semester V · **Software Engineering & Project Management (SEPM)**  
 > *Case Study:* **No. 38 — CarbonLedger**
 
@@ -101,12 +101,12 @@ open index.html
 
 ---
 
-## 🚀 Jira Cloud Project (`CAR`) Automation
+## 🚀 Jira Cloud Project (`CAR`) Backlog Setup
 
-The project management backlog has been automated on Atlassian Jira Cloud:
+The project management backlog is configured on Atlassian Jira Cloud:
 - **Project Key:** `CAR` (Scrum Board)
 - **8 Epics:** Calculation Engine, Ingestion & Evidence Tiering, Temporal Ref Data, Uncertainty Disclosures, Period Close State Machine, Late Data Pipeline, Audit Verify CLI, Data Quality Framework.
-- **31 Work Items:** Automated via [`populate_scrum_car.py`](populate_scrum_car.py).
+- **31 Work Items:** Generated via [`populate_scrum_car.py`](populate_scrum_car.py).
 
 ---
 
