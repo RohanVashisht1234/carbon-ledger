@@ -1,0 +1,851 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CarbonLedger | Multi-Year Emissions Accounting & Cryptographic Ledger</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+:root{--ink:#2A0F18;--forest:#6B1E33;--forest2:#8C2A45;--mint:#F3DDE3;--paper:#F6EEF0;--card:#FFFFFF;--line:#E6D3D9;--amber:#E39B2D;--amber-d:#9A5F0B;--red:#C0392B;--green:#2E7D6B;--blue:#5B6C8F;--mut:#7A6A70;--dk:#2A0F18;--rose:#B9788A;--serif:"Fraunces",Cambria,Georgia,serif;--sans:"Figtree",Calibri,Carlito,system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Consolas,monospace}
+*{box-sizing:border-box}body{margin:0;display:block;min-height:100vh;background:radial-gradient(900px 500px at 100% 0,#F3DDE3 0,transparent 60%),var(--paper);color:var(--ink);font:14px/1.5 var(--sans)}
+.brand{display:flex;gap:10px;align-items:center;font:700 21px var(--serif);color:#fff}
+.st{align-self:flex-start;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;letter-spacing:.04em;text-transform:uppercase}.st.open{background:#D1EADF;color:#0E4333}.st.closing{background:#B9C3DA;color:#1D2A4A}.st.closed{background:#F7DCD8;color:#781F15}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;box-shadow:0 1px 0 rgba(107,30,51,.04),0 6px 18px rgba(107,30,51,.06)}.card h3{margin:0 0 12px;font:700 17px var(--serif);color:var(--forest2)}
+.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:1.3fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+.hero{background:linear-gradient(160deg,#2A0F18 0%,#5B1A2B 60%,#6B1E33 100%);color:#fff;border-radius:14px;padding:26px 28px;display:grid;grid-template-columns:1.1fr 1fr;gap:26px;align-items:center;margin-bottom:16px}
+.hero .big{font:600 56px/1 var(--serif);letter-spacing:-.02em}.hero .big small{font-size:20px;color:var(--mint);margin-left:8px;font-weight:400}.hero p{color:var(--mint);margin:10px 0 0}
+.bar{height:12px;border-radius:6px;background:rgba(255,255,255,.2);display:flex;overflow:hidden}.bar i{display:block;height:100%}
+.kpi small{color:var(--mut)}.kpi b{display:block;font:600 26px var(--serif);margin-top:2px}.kpi span{font-size:12px;color:var(--mut)}
+table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;color:#fff;background:var(--forest);font-weight:600;padding:8px 10px}th:first-child{border-radius:6px 0 0 6px}th:last-child{border-radius:0 6px 6px 0}td{padding:9px 10px;border-bottom:1px solid #EFE3E7;vertical-align:middle}tr:hover td{background:#FBF5F7}
+.num{text-align:right;font-variant-numeric:tabular-nums}.mono{font-family:var(--mono);font-size:12.5px}
+.tier{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600}.tier:before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}.t-metered{color:var(--green)}.t-invoiced{color:var(--blue)}.t-estimated{color:var(--amber-d)}.t-missing{color:var(--red)}
+.tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;background:#FBEBD0;color:var(--amber-d)}.tag.late{background:#F7DCD8;color:var(--red)}
+.btn{font:600 13px var(--sans);padding:8px 15px;border-radius:8px;border:1px solid var(--forest);background:var(--forest);color:#fff;cursor:pointer;transition:all .15s ease;display:inline-flex;align-items:center;gap:6px}.btn:hover{background:var(--forest2)}.btn.ghost{background:transparent;color:var(--forest)}.btn.amb{background:var(--amber);border-color:var(--amber);color:#2b1704}.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.sp{flex:1}input,select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;min-width:0}
+.steps-nav{display:flex;margin-bottom:20px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--card);box-shadow:0 2px 8px rgba(107,30,51,.04)}
+.s-tab{flex:1;padding:12px 14px;background:var(--card);border-right:1px solid var(--line);cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s ease}
+.s-tab:last-child{border-right:none}
+.s-tab.active{background:var(--forest);color:#fff}
+.s-tab.done{background:#F8EDF0;color:var(--forest2)}
+.s-tab .s-num{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 12px var(--mono);background:rgba(0,0,0,.08);flex-shrink:0}
+.s-tab.active .s-num{background:var(--amber);color:#2A0F18}
+.s-tab.done .s-num{background:var(--forest);color:#fff}
+.year-card{border:1.5px solid var(--line);border-radius:12px;padding:16px 18px;background:#fff;cursor:pointer;transition:all .18s ease;display:flex;flex-direction:column;justify-content:space-between}
+.year-card:hover{border-color:var(--rose);box-shadow:0 6px 18px rgba(107,30,51,.08);transform:translateY(-2px)}
+.year-card.active{border:2px solid var(--forest);background:#FCF7F9;box-shadow:0 6px 20px rgba(107,30,51,.12)}
+.chk{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #EFE3E7;align-items:flex-start}.chk i{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center;font-style:normal;font-size:12px}.chk.ok i{background:var(--green);border-color:var(--green);color:#fff}
+.hash{font:12.5px/1.6 var(--mono);word-break:break-all;border-left:3px solid var(--amber);background:#2A0F18;color:#F3DDE3;padding:12px 14px;border-radius:10px}.hash.bad{background:#3A1712;color:#F5C3B8}.hash b{color:var(--amber)}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}.field label{font-size:12px;color:var(--mut);font-weight:600}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--forest);color:#fff;padding:11px 18px;border-radius:10px;z-index:99;box-shadow:0 8px 30px rgba(0,0,0,.3);animation:up .25s}@keyframes up{from{transform:translate(-50%,10px);opacity:0}}
+.pill{display:inline-flex;gap:4px;border:1px solid var(--line);border-radius:99px;padding:3px;background:#fff}.pill button{border:0;background:none;padding:5px 12px;border-radius:99px;cursor:pointer;font:600 12px var(--sans);color:var(--mut)}.pill button.on{background:var(--forest);color:#fff}
+.sc{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--mint);color:var(--forest);font-weight:700;font-size:12px}
+.top{background:linear-gradient(110deg,#2A0F18 0%,#4A1626 55%,#6B1E33 100%);color:#F3DDE3;padding:14px 34px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.top select{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.25);padding:6px 10px;border-radius:8px}.top select option{color:#2A0F18}
+.chipx{font:600 12px var(--mono);padding:5px 10px;border-radius:99px;border:1px solid rgba(243,221,227,.3);display:inline-flex;gap:7px;align-items:center}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--amber)}.dot.open{background:#7FD1AE;animation:pu 1.6s infinite}.dot.closed{background:#E89A8E}@keyframes pu{50%{opacity:.35}}
+.tabs{display:flex;gap:4px;padding:10px 34px 0;background:var(--card);border-bottom:1px solid var(--line);overflow-x:auto;position:sticky;top:0;z-index:5}
+.tabs a{padding:11px 16px;font-weight:600;color:var(--mut);text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap;cursor:pointer}.tabs a:hover{color:var(--forest)}.tabs a.on{color:var(--forest);border-color:var(--amber)}
+main{max-width:1240px;margin:0 auto;padding:26px 34px 70px}
+.ttl{font:700 28px var(--serif);color:var(--forest);margin:0 0 4px}.lead{color:var(--mut);margin:0 0 20px;max-width:75ch}
+.plant{padding:12px;border-radius:10px;border:1px solid var(--line);background:#fff;text-align:center}.plant b{font:700 15px var(--serif);color:var(--forest)}.plant div{font:12px var(--mono);margin:4px 0}
+.cert{position:relative;overflow:hidden;padding:34px 38px}
+.cert h2{font:700 24px var(--serif);color:var(--forest);margin:6px 0}.seal{border-left:4px solid var(--amber)}
+.dag{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.node{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff}.node.on{border:2px solid var(--forest2);box-shadow:0 6px 20px rgba(107,30,51,.15)}.node small{color:var(--mut)}
+.term{background:#2A0F18;color:#F3DDE3;border-radius:12px;padding:16px 18px;font:12.5px/1.8 var(--mono);min-height:210px}.term .ok{color:#7FD1AE}.term .bad{color:#F0877A}.term .d{color:#B9788A}
+.warn{background:#FBEBD0;border:1px solid #F0D3A0;color:#6b4306;border-radius:10px;padding:10px 14px;font-size:13px}
+.steps{display:flex;gap:0;margin:6px 0 18px}.step{flex:1;padding:14px 16px;border:1px solid var(--line);background:var(--card);position:relative}.step:first-child{border-radius:12px 0 0 12px}.step:last-child{border-radius:0 12px 12px 0}.step.done{background:#F8EDF0;border-color:#E6D3D9}.step.cur{background:var(--forest);color:#fff;border-color:var(--forest)}.step b{font:600 16px var(--serif)}.step small{display:block;opacity:.75}
+@media print{.top,.tabs,.steps-nav,.noprint{display:none!important}main{padding:0}}
+@media(max-width:900px){.dag,.g4,.g3,.g2{grid-template-columns:1fr}.top,.tabs,main{padding-left:16px;padding-right:16px}.steps-nav{flex-direction:column}}
+</style></head><body><header class="top" id="top"></header><nav class="tabs" id="tabs"></nav><main id="view"></main><div id="toast" class="toast" hidden></div><script>"use strict";
+const $=(s,r=document)=>r.querySelector(s),fmt=(n,d=2)=>Number(n||0).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const PL=[["P1","Pune Assembly"],["P2","Nashik Castings"],["P3","Chennai Drives"],["P4","Hosur Machining"],["P5","Rajkot Forge"],["P6","Indore Components"],["P7","Pantnagar Stamping"],["P8","Vizag Coatings"],["P9","Aurangabad Final Assembly"]];
+const F={ELEC:{n:"Grid electricity",u:"kWh",f:.5,s:2},DIESEL:{n:"Diesel",u:"litres",f:2.5,s:1},GAS:{n:"Natural gas",u:"m³",f:2,s:1},FREIGHT:{n:"Road freight",u:"tonne-km",f:.1,s:3},SUPPLIER:{n:"Supplier declaration",u:"kgCO₂e",f:1,s:3}};
+const TI={metered:.02,invoiced:.08,estimated:.25};
+const mk=(n,p,t,q,ti,d,doc="")=>({id:"REC-"+d.slice(0,4)+"-"+String(n).padStart(3,"0"),doc:doc||("DOC-"+d.slice(0,4)+"-"+String(n).padStart(3,"0")),plant:p,type:t,qty:q,tier:ti,date:d});
+const E=r=>r.qty*(F[r.type]?F[r.type].f:1);
+function tot(rs){let e=0,q=0,l=0;const sc={1:0,2:0,3:0},ti={metered:0,invoiced:0,estimated:0};(rs||[]).forEach(r=>{const fObj=F[r.type]||{f:1,s:1};const x=r.qty*fObj.f,u=x*(TI[r.tier]||.08);e+=x;q+=u*u;l+=u;sc[fObj.s]=(sc[fObj.s]||0)+x;ti[r.tier]=(ti[r.tier]||0)+x});return{e,rss:Math.sqrt(q),lin:l,sc,ti}}
+const canon=(rs,t,yr)=>JSON.stringify({pair:`CL-${yr}.1`,period:`FY${yr}`,lines:(rs||[]).map((r,i)=>[r.id,r.plant,r.type,r.qty+(t&&i===2?1:0),r.tier,r.date,(F[r.type]||{f:1}).f,E(r).toFixed(6),r.doc||""])});
+async function sha(s){if(crypto&&crypto.subtle){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}let h=5381;for(const c of s)h=(h*33^c.charCodeAt(0))>>>0;return h.toString(16).padStart(8,"0").repeat(8)}
+
+const S={
+  role:"lead",
+  tab:"stepper",
+  step:1,
+  year:"2024",
+  years:{
+    "2023":{
+      year:"2023",
+      state:"CLOSED",
+      closedAt:"2024-01-15 16:00",
+      rec:[
+        mk(1,"P1","ELEC",38000,"metered","2023-03-31","EB-PUNE-23-01"),
+        mk(2,"P2","ELEC",19000,"metered","2023-06-30","EB-NSK-23-02"),
+        mk(3,"P3","DIESEL",1500,"invoiced","2023-05-20","INV-IOCL-23-88"),
+        mk(4,"P7","FREIGHT",18000,"estimated","2023-07-18","DECL-LOG-23-01")
+      ],
+      late:[],
+      revisionActive:false,
+      ver:[]
+    },
+    "2024":{
+      year:"2024",
+      state:"CLOSED",
+      closedAt:"2025-01-10 14:00",
+      rec:[
+        mk(1,"P1","ELEC",40000,"metered","2024-03-31","EB-PUNE-24-01"),
+        mk(2,"P2","ELEC",20000,"metered","2024-06-30","EB-NSK-24-02"),
+        mk(3,"P4","ELEC",20000,"metered","2024-09-30","EB-HOS-24-03"),
+        mk(4,"P6","ELEC",20000,"metered","2024-12-31","EB-IND-24-04"),
+        mk(5,"P3","DIESEL",1600,"invoiced","2024-05-20","INV-PETRO-24-1"),
+        mk(6,"P5","DIESEL",1200,"invoiced","2024-08-14","INV-PETRO-24-2"),
+        mk(7,"P9","DIESEL",1200,"invoiced","2024-10-02","INV-PETRO-24-3"),
+        mk(8,"P7","FREIGHT",20000,"estimated","2024-07-18","DECL-EXP-24-9")
+      ],
+      late:[],
+      revisionActive:false,
+      ver:[]
+    },
+    "2025":{
+      year:"2025",
+      state:"OPEN",
+      closedAt:null,
+      rec:[
+        mk(1,"P1","ELEC",12000,"metered","2025-01-31","EB-PUNE-25-01")
+      ],
+      late:[],
+      revisionActive:false,
+      ver:[]
+    }
+  },
+  tamper:false,
+  sel:"v1",
+  log:[]
+};
+
+const getY=()=>S.years[S.year]||S.years["2024"];
+Object.defineProperty(S,"rec",{get:()=>getY().rec});
+Object.defineProperty(S,"late",{get:()=>getY().late});
+Object.defineProperty(S,"ver",{get:()=>getY().ver});
+Object.defineProperty(S,"state",{get:()=>getY().state,set:v=>{getY().state=v;}});
+Object.defineProperty(S,"closedAt",{get:()=>getY().closedAt,set:v=>{getY().closedAt=v;}});
+
+const ROLES={lead:["Reporting Lead",1,1],officer:["Plant Data Officer (P1)",1,0],manager:["Plant Manager (P1)",0,0],auditor:["Auditor (read-only)",0,0]};
+const can={add:()=>["lead","officer"].includes(S.role),close:()=>S.role==="lead"};
+const toast=m=>{const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,3400)};
+const lg=m=>S.log.unshift({t:new Date().toTimeString().slice(0,5),m});
+const tH=t=>`<span class="tier t-${t}">${t}</span>`,sc=s=>`<span class="sc">${s}</span>`;
+const TABS=[
+  ["stepper","⚡ Year Document Stepper"],
+  ["overview","Overview"],
+  ["intake","Activity intake"],
+  ["close","Period close & revision"],
+  ["reports","Reports & certificates"],
+  ["verify","Auditor verify"],
+  ["dq","Data quality plan"]
+];
+const HEAD={
+  stepper:["Annual Document & Ledger Stepper","Step-by-step workflow: select year, verify read-only baseline, branch revision ledgers for late documents, and seal certified documents."],
+  overview:["Portfolio overview","Emissions summary and honest dual uncertainty range across plants."],
+  intake:["Activity intake","Append-only entry. The evidence decides tier, the activity date decides the factor."],
+  close:["Period close & revision","Closing freezes baseline. Late records branch onto the same year, preserving historical baselines."],
+  reports:["Reports & certificates","Every issued version is kept, sealed with a SHA-256 hash."],
+  verify:["Auditor verify","Recompute the report from its pinned inputs and compare cryptographic bytes."],
+  dq:["Data quality plan","Moving estimated data toward invoiced and metered over three cycles."]
+};
+
+const V={};
+
+V.stepper=()=>{
+  const yObj=getY(),y=S.year,isClosed=yObj.state==="CLOSED",hasRev=!!yObj.revisionActive,vCount=yObj.ver.length;
+  const allRecs=isClosed&&hasRev?[...yObj.rec,...yObj.late]:(isClosed&&vCount?yObj.ver[vCount-1].recs:[...yObj.rec,...yObj.late]);
+  const T=tot(allRecs);
+  let content="";
+
+  if(S.step===1){
+    content=`
+    <div class="card">
+      <div class="row" style="margin-bottom:8px">
+        <h3 style="margin:0">Step 1: Select Accounting & Compliance Year</h3>
+        <span class="sp"></span>
+        <span class="tag">Active: FY${y}</span>
+      </div>
+      <p class="small" style="margin-top:0">Choose the compliance year to inspect, add documents, or branch revision ledgers. You can also register a new reporting period.</p>
+      <div class="grid g3" style="margin:20px 0">
+        ${Object.keys(S.years).sort().map(yrKey=>{
+          const yData=S.years[yrKey],isAct=yrKey===S.year,isCls=yData.state==="CLOSED";
+          const yrTot=tot(yData.ver.length?yData.ver[yData.ver.length-1].recs:[...yData.rec,...yData.late]);
+          return `
+          <div class="year-card ${isAct?'active':''}" data-act="selectYear" data-y="${yrKey}">
+            <div class="row">
+              <b style="font-size:20px;font-family:var(--serif);color:var(--forest)">FY${yrKey}</b>
+              <span class="sp"></span>
+              <span class="st ${isCls?'closed':'open'}">${isCls?'READ-ONLY 🔒':'OPEN 🟢'}</span>
+            </div>
+            <div class="mono" style="font-size:12px;color:var(--mut);margin:8px 0">
+              ${yData.rec.length+yData.late.length} document(s) · ${yData.ver.length?'v'+yData.ver.length+' sealed':'Draft'}
+            </div>
+            <div style="font-weight:700;font-size:22px;font-family:var(--serif);color:var(--ink)">
+              ${fmt(yrTot.e,0)} <small style="font-size:13px;font-weight:400;color:var(--mut)">kgCO₂e</small>
+            </div>
+            <div class="small" style="margin-top:8px;color:${isCls?'var(--forest2)':'var(--green)'}">
+              ${isCls?(yData.revisionActive?'🌿 Revision ledger active':'🔒 Baseline permanently frozen'):'Ready for direct entry'}
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+      <div class="row" style="padding-top:14px;border-top:1px solid var(--line);align-items:center">
+        <span class="small" style="font-weight:600">Register Another Year:</span>
+        <input type="number" id="inpNewYear" placeholder="e.g. 2026" min="2000" max="2050" style="width:130px">
+        <button class="btn ghost" data-act="addNewYear">+ Register Year</button>
+        <span class="sp"></span>
+        <button class="btn" data-act="setStep" data-step="2">Next: Check Ledger Status & Mode →</button>
+      </div>
+    </div>`;
+  }
+  else if(S.step===2){
+    content=`
+    <div class="card">
+      <div class="row" style="margin-bottom:8px">
+        <h3 style="margin:0">Step 2: Ledger Status & Branching Check for FY${y}</h3>
+        <span class="sp"></span>
+        <span class="st ${isClosed?'closed':'open'}">${isClosed?'LOCKED / READ-ONLY':'OPEN / ACTIVE'}</span>
+      </div>
+      <p class="small" style="margin-top:0">Verify if FY${y} is open for direct entry, or if an audit-compliant revision ledger is required for late arriving documents.</p>
+
+      ${isClosed?`
+        <div style="background:#FFF5F7;border:1px solid var(--line);border-left:5px solid var(--forest);border-radius:10px;padding:18px;margin:18px 0">
+          <div class="row">
+            <span style="font-size:28px">🔒</span>
+            <div>
+              <h4 style="margin:0;font-size:16px;color:var(--forest)">FY${y} Baseline Ledger is CLOSED and READ-ONLY</h4>
+              <div class="small" style="color:var(--mut);margin-top:2px">
+                Cut-off frozen on ${yObj.closedAt||'Year-End'}. Sealed Version: <b>v1</b>. SHA-256 Seal: <span class="mono">${yObj.ver[0]?yObj.ver[0].hash.slice(0,28)+'…':'-'}</span>
+              </div>
+            </div>
+          </div>
+          <p style="margin:12px 0 0;font-size:13.5px;color:var(--dk)">
+            <b>Tamper-Proof Baseline:</b> Historical accounting law blocks direct editing, overwriting, or deletion inside this sealed ledger. Any attempt to modify closed rows invalidates the cryptographic hash.
+          </p>
+        </div>
+
+        <div class="card" style="background:#FFFDF8;border:1.5px dashed var(--amber);padding:18px;margin-bottom:18px">
+          <div class="row">
+            <span style="font-size:26px">⚡</span>
+            <div>
+              <h4 style="margin:0 0 4px;color:var(--amber-d)">Did an electricity bill or audit invoice arrive late for FY${y}?</h4>
+              <p class="small" style="margin:0">
+                A late invoice belonging to FY${y} must <b>not</b> be dumped into FY${+y+1} (which distorts the next year's budget) and cannot overwrite FY${y}-v1 (which is illegal).<br>
+                Instead, <b>branch an editable Revision Ledger (v${vCount+1}) on this same year's timeline</b> to preserve audit lineage.
+              </p>
+            </div>
+          </div>
+          <div style="margin-top:16px;padding-top:14px;border-top:1px dashed #EED2AC">
+            ${!hasRev?`
+              <div class="row">
+                <button class="btn amb" data-act="branchRevision">🌿 Branch Revision Ledger (FY${y}-v${vCount+1})</button>
+                <span class="small" style="color:var(--mut)">Creates child ledger node attached to FY${y}'s sealed baseline.</span>
+              </div>
+            `:`
+              <div class="row" style="align-items:center">
+                <div style="background:#E8F5EE;border:1px solid #7FD1AE;color:#0B3A2C;padding:8px 14px;border-radius:8px;font-weight:600;display:flex;align-items:center;gap:8px">
+                  <span style="color:var(--green)">✓</span> Revision Ledger (FY${y}-v${vCount+1}) is ACTIVE and EDITABLE
+                </div>
+                <span class="tag late">${yObj.late.length} late document(s) pending</span>
+                <span class="sp"></span>
+                <button class="btn ghost" data-act="cancelRevision" style="font-size:12px;padding:6px 10px">Close Revision Branch</button>
+              </div>
+            `}
+          </div>
+        </div>
+      `:`
+        <div style="background:#F2FAF6;border:1px solid #7FD1AE;border-left:5px solid var(--green);border-radius:10px;padding:18px;margin:18px 0">
+          <div class="row">
+            <span style="font-size:28px">🟢</span>
+            <div>
+              <h4 style="margin:0;font-size:16px;color:var(--green)">FY${y} Primary Ledger is OPEN</h4>
+              <div class="small" style="color:var(--mut);margin-top:2px">
+                Open operating period. Activity documents and readings can be appended directly.
+              </div>
+            </div>
+            <span class="sp"></span>
+            <button class="btn amb" data-act="quickClose">Freeze & Close Baseline (Lock)</button>
+          </div>
+        </div>
+      `}
+
+      <div class="row" style="margin-top:20px;padding-top:14px;border-top:1px solid var(--line)">
+        <button class="btn ghost" data-act="setStep" data-step="1">← Back to Year Selection</button>
+        <span class="sp"></span>
+        ${isClosed&&!hasRev?`
+          <span class="small" style="color:var(--amber-d);margin-right:12px">⚠️ Ledger is read-only. Branch a revision ledger above to add late documents.</span>
+          <button class="btn" data-act="setStep" data-step="4">View Sealed Certificate →</button>
+        `:`
+          <button class="btn" data-act="setStep" data-step="3">Next: Set Documents & Invoices →</button>
+        `}
+      </div>
+    </div>`;
+  }
+  else if(S.step===3){
+    const f=V.stepperForm||{doc:"INV-"+y+"-Q4-01",plant:"P1",type:"ELEC",qty:15000,tier:"invoiced",date:y+"-12-15"};
+    const curF=F[f.type]||{f:1,s:1,u:"units",n:""},curE=f.qty*curF.f,curU=curE*(TI[f.tier]||.08);
+
+    content=`
+    <div class="grid g2" style="grid-template-columns:380px 1fr">
+      <div class="card">
+        <div class="row" style="margin-bottom:12px">
+          <h3 style="margin:0">Set Document for FY${y}</h3>
+          <span class="sp"></span>
+          <span class="tag ${isClosed?'late':''}">${isClosed?`Revision FY${y}-v${vCount+1}`:`Base FY${y}`}</span>
+        </div>
+
+        <div class="field">
+          <label>Document / Invoice Number</label>
+          <input type="text" id="sfDoc" value="${f.doc}" placeholder="e.g. EB-MH-2024-8891">
+        </div>
+
+        <div class="field">
+          <label>Plant Facility</label>
+          <select id="sfPlant">
+            ${PL.map(([k,n])=>`<option value="${k}" ${f.plant===k?'selected':''}>${k} ${n}</option>`).join("")}
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Emission Activity</label>
+          <select id="sfType">
+            ${Object.entries(F).map(([k,v])=>`<option value="${k}" ${f.type===k?'selected':''}>Scope ${v.s} · ${v.n} (${v.u})</option>`).join("")}
+          </select>
+        </div>
+
+        <div class="two">
+          <div class="field">
+            <label>Quantity</label>
+            <input type="number" id="sfQty" min="0" value="${f.qty}">
+          </div>
+          <div class="field">
+            <label>Activity Date</label>
+            <input type="date" id="sfDate" value="${f.date}">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Evidence & Uncertainty Tier</label>
+          <select id="sfTier">
+            <option value="metered" ${f.tier==='metered'?'selected':''}>Meter reading (Tier 1 · ±2%)</option>
+            <option value="invoiced" ${f.tier==='invoiced'?'selected':''}>Supplier invoice (Tier 2 · ±8%)</option>
+            <option value="estimated" ${f.tier==='estimated'?'selected':''}>Assumption / Estimate (Tier 3 · ±25%)</option>
+          </select>
+        </div>
+
+        <div class="card" style="background:var(--paper);margin:14px 0">
+          <div class="row"><span class="small">Emission Factor</span><span class="sp"></span><b class="mono">${curF.f} kgCO₂e/${curF.u}</b></div>
+          <div class="row" style="margin-top:4px"><span class="small">Calculated Carbon</span><span class="sp"></span><b class="mono" style="color:var(--forest);font-size:15px">${fmt(curE)} kgCO₂e</b></div>
+          <div class="row" style="margin-top:4px"><span class="small">Uncertainty Bound</span><span class="sp"></span><span class="mono">± ${fmt(curU)} kg (±${(TI[f.tier]||.08)*100}%)</span></div>
+        </div>
+
+        <button class="btn amb" style="width:100%" data-act="addStepperDoc">
+          ➕ Append Document to FY${y} ${isClosed?'Revision':'Ledger'}
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="row" style="margin-bottom:12px">
+          <h3 style="margin:0">Active Ledger for FY${y}</h3>
+          <span class="sp"></span>
+          <span class="mono small">${allRecs.length} total entries</span>
+        </div>
+
+        <div style="max-height:460px;overflow-y:auto;border:1px solid var(--line);border-radius:8px">
+          <table>
+            <thead>
+              <tr>
+                <th>Doc / Record</th>
+                <th>Plant</th>
+                <th>Activity</th>
+                <th class="num">Qty</th>
+                <th>Tier</th>
+                <th class="num">kgCO₂e</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${allRecs.map(r=>{
+                const isLateRec=yObj.late.includes(r);
+                return `
+                  <tr style="${isLateRec?'background:#FFF8F6':''}">
+                    <td class="mono">
+                      <div><b>${r.doc||r.id}</b></div>
+                      <small style="color:var(--mut)">${r.date} ${isLateRec?'<span class="tag late">REVISION</span>':'<span class="tag">BASE</span>'}</small>
+                    </td>
+                    <td><b>${r.plant}</b></td>
+                    <td>${sc(F[r.type].s)} ${F[r.type].n}</td>
+                    <td class="num">${Number(r.qty).toLocaleString()}</td>
+                    <td>${tH(r.tier)}</td>
+                    <td class="num"><b>${fmt(E(r))}</b></td>
+                  </tr>`;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="row" style="margin-top:16px;padding-top:12px;border-top:1px solid var(--line)">
+          <button class="btn ghost" data-act="setStep" data-step="2">← Back to Ledger Status</button>
+          <span class="sp"></span>
+          <button class="btn" data-act="setStep" data-step="4">Next: Seal & Issue Document →</button>
+        </div>
+      </div>
+    </div>`;
+  }
+  else if(S.step===4){
+    const activeVerObj=yObj.ver.length?yObj.ver[yObj.ver.length-1]:null;
+    const isReadyToSealRevision=isClosed&&hasRev&&yObj.late.length>0;
+    const isReadyToSealBase=!isClosed&&yObj.rec.length>0;
+
+    content=`
+    <div class="card">
+      <div class="row" style="margin-bottom:12px">
+        <div>
+          <span class="mono small">GHG PROTOCOL CERTIFICATION · FY${y}</span>
+          <h2 style="margin:2px 0;font-family:var(--serif);color:var(--forest)">
+            Annual Emissions Inventory & Compliance Certificate
+          </h2>
+        </div>
+        <span class="sp"></span>
+        <span class="st ${isClosed?'closed':'open'}">
+          ${isClosed?(yObj.ver.length>1?`RESTATED v${yObj.ver.length}`:'SEALED v1'):'DRAFT'}
+        </span>
+      </div>
+
+      <div class="grid g3" style="margin:16px 0">
+        <div class="card kpi" style="background:var(--paper)">
+          <small>Total Emissions</small>
+          <b style="color:var(--forest)">${fmt(T.e,0)} kgCO₂e</b>
+          <span>${PL.length} manufacturing facilities</span>
+        </div>
+        <div class="card kpi" style="background:var(--paper)">
+          <small>Dual Uncertainty</small>
+          <b>± ${fmt(T.rss,0)} kg</b>
+          <span>RSS ±${fmt(T.rss/(T.e||1)*100,1)}% · Linear ±${fmt(T.lin/(T.e||1)*100,1)}%</span>
+        </div>
+        <div class="card kpi" style="background:var(--paper)">
+          <small>Certified Documents</small>
+          <b>${allRecs.length} Ingested</b>
+          <span>${yObj.ver.length} sealed audit version(s)</span>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Scope</th><th>Emission Category</th><th class="num">Emissions (kgCO₂e)</th><th class="num">% Total</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>${sc(1)} Scope 1</td><td>Direct Fuel Combustion (Diesel, Gas)</td><td class="num">${fmt(T.sc[1])}</td><td class="num">${fmt(T.sc[1]/(T.e||1)*100,1)}%</td></tr>
+          <tr><td>${sc(2)} Scope 2</td><td>Purchased Grid Electricity</td><td class="num">${fmt(T.sc[2])}</td><td class="num">${fmt(T.sc[2]/(T.e||1)*100,1)}%</td></tr>
+          <tr><td>${sc(3)} Scope 3</td><td>Logistics, Freight & Declarations</td><td class="num">${fmt(T.sc[3])}</td><td class="num">${fmt(T.sc[3]/(T.e||1)*100,1)}%</td></tr>
+          <tr style="font-weight:700;background:#F9ECEF"><td colspan="2">Net Certified Inventory</td><td class="num font-bold">${fmt(T.e)}</td><td class="num">100.0%</td></tr>
+        </tbody>
+      </table>
+
+      <div style="margin:20px 0">
+        <div class="hash" style="border-left:4px solid var(--amber)">
+          <div class="row" style="margin-bottom:6px">
+            <b>SHA-256 Cryptographic Audit Seal</b>
+            <span class="sp"></span>
+            <span class="tag" style="background:#4A1E2B;color:#F3DDE3">Pair CL-${y}.1</span>
+          </div>
+          ${activeVerObj?`
+            <div style="font-size:13px;word-break:break-all">${activeVerObj.hash}</div>
+            <div class="small" style="margin-top:6px;color:#D8BAC2">
+              Version: <b>v${activeVerObj.n}</b> · Sealed at: ${activeVerObj.date} · Signer: Reporting Lead (${S.role})
+              ${activeVerObj.n>1?`<br>🔗 Merkle Lineage: Restated revision rooted on Parent Baseline v1 (Hash: ${yObj.ver[0].hash.slice(0,24)}…)`:''}
+            </div>
+          `:`
+            <div style="color:var(--amber)">[ Draft Inventory: Seal will be permanently generated upon closing/signing below ]</div>
+          `}
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);align-items:center">
+        <button class="btn ghost" data-act="setStep" data-step="3">← Back to Documents</button>
+        <span class="sp"></span>
+        ${isReadyToSealRevision?`
+          <button class="btn amb" data-act="sealRevision">
+            🔒 Seal & Issue FY${y}-v${vCount+1} (Restated Certificate)
+          </button>
+        `:isReadyToSealBase?`
+          <button class="btn amb" data-act="sealBaseline">
+            🔒 Freeze, Seal & Issue FY${y}-v1 Baseline
+          </button>
+        `:''}
+        <button class="btn ghost" onclick="print()">🖨️ Print Certificate</button>
+        <button class="btn ghost" data-act="exportYearJson">📥 Export JSON</button>
+        <button class="btn" data-act="setStep" data-step="1">Select Another Year 🔄</button>
+      </div>
+    </div>`;
+  }
+
+  const stepsList=[
+    {n:1,title:"1. Select Year",sub:`FY${y}`},
+    {n:2,title:"2. Ledger Status",sub:isClosed?(hasRev?`Revision v${vCount+1}`:'Read-only 🔒'):'Open 🟢'},
+    {n:3,title:"3. Set Documents",sub:`${allRecs.length} entries`},
+    {n:4,title:"4. Seal & Issue",sub:isClosed&&vCount?`v${vCount} Sealed`:'Draft'}
+  ];
+
+  return `
+    <div class="steps-nav">
+      ${stepsList.map(s=>`
+        <div class="s-tab ${S.step===s.n?'active':S.step>s.n?'done':''}" data-act="setStep" data-step="${s.n}">
+          <div class="s-num">${S.step>s.n?'✓':s.n}</div>
+          <div>
+            <b>${s.title}</b>
+            <small style="display:block;font-size:11px;opacity:.8">${s.sub}</small>
+          </div>
+        </div>
+      `).join("")}
+    </div>
+    ${content}
+  `;
+};
+
+V.overview=()=>{
+  const yObj=getY(),allRecs=yObj.ver.length?yObj.ver[yObj.ver.length-1].recs:[...yObj.rec,...yObj.late],T=tot(allRecs),p=T.rss/(T.e||1)*100;
+  return `<div class="hero">
+    <div>
+      <div style="color:#F3DDE3">Total emissions, FY${S.year}</div>
+      <div class="big">${fmt(T.e,0)}<small>kgCO₂e</small></div>
+      <p>± ${fmt(T.rss,0)} kg (${fmt(p,1)}%) by root-sum-square, and ± ${fmt(T.lin,0)} kg (${fmt(T.lin/(T.e||1)*100,1)}%) as the conservative linear bound. Both are disclosed.</p>
+    </div>
+    <div>${["metered","invoiced","estimated"].map(t=>`<div style="margin:9px 0"><div class="row" style="font-size:13px"><span class="tier t-${t}" style="color:#fff">${t} ±${TI[t]*100}%</span><span class="sp"></span><b>${fmt((T.ti[t]||0)/(T.e||1)*100,1)}%</b></div><div class="bar"><i style="width:${(T.ti[t]||0)/(T.e||1)*100}%;background:${{metered:"#7FD1AE",invoiced:"#B9C3DA",estimated:"#E39B2D"}[t]}"></i></div></div>`).join("")}</div>
+  </div>
+  <div class="grid g3" style="margin-bottom:16px">${[[1,"Scope 1","Direct fuel combustion"],[2,"Scope 2","Purchased grid electricity"],[3,"Scope 3","Logistics and freight"]].map(([s,n,d])=>`<div class="card kpi"><small>${n} · ${d}</small><b>${fmt(T.sc[s]||0,0)} kg</b><span>${fmt((T.sc[s]||0)/(T.e||1)*100,1)}% of total</span></div>`).join("")}</div>
+  <div class="card"><h3>Nine plants · FY${S.year}</h3><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))">${PL.map(([k,n])=>{const rs=allRecs.filter(r=>r.plant===k),t=tot(rs),top=rs.length?Object.entries(t.ti).sort((a,b)=>b[1]-a[1])[0][0]:null;return `<div class="plant"><b>${k}</b><div style="font-family:var(--sans);color:var(--mut)">${n}</div><div>${fmt(t.e,0)} kg</div>${top?tH(top):'<span class="small">no data</span>'}</div>`}).join("")}</div></div>`;
+};
+
+V.intake=()=>{
+  const yObj=getY(),f=V.f||{plant:"P1",type:"ELEC",qty:25000,date:S.year+"-11-15",ev:"invoiced"},curF=F[f.type]||{f:1,s:1,u:"units",n:""},e=f.qty*curF.f,ro=!can.add();
+  const rows=[...yObj.late.map(r=>({...r,tag:"REVISION"})),...yObj.rec.map(r=>({...r,tag:"BASE"}))];
+  return `<div class="grid" style="grid-template-columns:340px 1fr">
+    <div class="card">
+      <h3>New activity record · FY${S.year}</h3>
+      ${ro?`<div class="warn" style="margin-bottom:12px">${S.role==="auditor"?"Auditors are read-only.":"Your role cannot add records."}</div>`:S.role==="officer"?`<div class="small" style="margin-bottom:10px">As Plant Data Officer you can add records for P1 only.</div>`:""}
+      <div class="field"><label>Plant</label><select id="fp">${PL.map(([k,n])=>`<option ${k===f.plant?"selected":""} value="${k}">${k} ${n}</option>`).join("")}</select></div>
+      <div class="field"><label>Activity</label><select id="ft">${Object.entries(F).map(([k,v])=>`<option ${k===f.type?"selected":""} value="${k}">Scope ${v.s} · ${v.n} (${v.u})</option>`).join("")}</select></div>
+      <div class="two"><div class="field"><label>Quantity</label><input id="fq" type="number" min="0" value="${f.qty}"></div><div class="field"><label>Activity date</label><input id="fd" type="date" value="${f.date}"></div></div>
+      <div class="field"><label>Evidence</label><select id="fe">${[["metered","Meter reading"],["invoiced","Supplier invoice"],["estimated","Assumption or declaration"]].map(([k,n])=>`<option ${k===f.ev?"selected":""} value="${k}">${n} (±${TI[k]*100}%)</option>`).join("")}</select></div>
+      <div class="card" style="background:var(--paper);margin-bottom:12px">
+        <div class="row"><span class="small">Tier</span><span class="sp"></span>${tH(f.ev)}</div>
+        <div class="row"><span class="small">Factor</span><span class="sp"></span><span class="mono">${curF.f} kgCO₂e/${curF.u}</span></div>
+        <div class="row"><span class="small">Emission</span><span class="sp"></span><b class="mono">${fmt(e)} kg</b></div>
+      </div>
+      ${yObj.state==="CLOSED"?`<div class="warn" style="margin-bottom:12px">FY${S.year} is closed. ${yObj.revisionActive?'Appending to <b>Revision Ledger</b>.':'Ledger is read-only. Branch a revision ledger to ingest late records.'}</div>`:""}
+      <button class="btn amb" style="width:100%" data-act="add" ${ro||(yObj.state==="CLOSED"&&!yObj.revisionActive)?"disabled":""}>Append to FY${S.year} ledger</button>
+    </div>
+    <div class="card">
+      <div class="row"><h3 style="margin:0">Immutable ledger · FY${S.year}</h3><span class="sp"></span><span class="tag">UPDATE and DELETE blocked</span></div>
+      <table style="margin-top:10px">
+        <thead><tr><th>ID</th><th>Plant</th><th>Activity</th><th class="num">Qty</th><th>Tier</th><th class="num">kgCO₂e</th></tr></thead>
+        <tbody>${rows.map(r=>`<tr><td class="mono">${r.id} <span class="tag ${r.tag==="REVISION"?"late":""}">${r.tag}</span></td><td>${r.plant}</td><td>${sc(F[r.type].s)} ${F[r.type].n}</td><td class="num">${Number(r.qty).toLocaleString()}</td><td>${tH(r.tier)}</td><td class="num">${fmt(E(r))}</td></tr>`).join("")}</tbody>
+      </table>
+    </div>
+  </div>`;
+};
+
+V.close=()=>{
+  const yObj=getY(),i=["OPEN","CLOSING","CLOSED"].indexOf(yObj.state),nv=yObj.ver.length,LT=tot(yObj.late);
+  const ck=[["All 9 plants confirmed",true],["Every record has evidence and resolves to a factor",true],["Gap-filled items flagged as estimated",true],[`Pair pinned: CL-${S.year}.1`,true]];
+  return `<div class="steps">${[["Open","Plants enter and confirm data"],["Closing","Checks run, Reporting Lead approves"],["Closed","Cut-off frozen, v1 issued"]].map(([a,b],k)=>`<div class="step ${k<i?"done":k===i?"cur":""}"><b>${a}</b><small>${b}</small></div>`).join("")}</div>
+  <div class="grid g2">
+    <div class="card">
+      <h3>Close FY${S.year}</h3>
+      ${ck.map(([t,o])=>`<div class="chk ${o?"ok":""}"><i>${o?"✓":""}</i><span>${t}</span></div>`).join("")}
+      <div class="row" style="margin-top:14px">
+        ${yObj.state==="OPEN"?`<button class="btn" data-act="closing" ${can.close()?"":"disabled"}>Start close</button>`:yObj.state==="CLOSING"?`<button class="btn amb" data-act="approve" ${can.close()?"":"disabled"}>Approve and close</button><button class="btn ghost" data-act="reopen">Back to open</button>`:`<span class="tier t-metered">Closed ${yObj.closedAt||""}</span>`}
+      </div>
+      ${can.close()?"":`<p class="small">Only the Reporting Lead can close a period.</p>`}
+    </div>
+    <div class="card">
+      <h3>Late data & revision branch</h3>
+      <p style="margin-top:0">A late invoice for FY${S.year} is accepted into an audit-compliant revision branch. It is attributed to FY${S.year} without mutating the issued baseline report.</p>
+      <div class="row"><span class="small">Late records waiting</span><span class="sp"></span><b>${yObj.late.length}</b></div>
+      <div class="row"><span class="small">Adjustment</span><span class="sp"></span><b class="mono">+${fmt(LT.e)} kg</b></div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn amb" data-act="sim" ${yObj.state==="CLOSED"&&can.add()?"":"disabled"}>Simulate late diesel invoice (+1,000 L)</button>
+        <button class="btn" data-act="v2" ${yObj.late.length&&can.close()?"":"disabled"}>Issue v${nv+1} (restated)</button>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>Version tree · FY${S.year}</h3>
+    <div class="dag">
+      <div class="node ${nv===1?"on":""}"><small>v1 · baseline close</small><br><b>${nv?fmt(tot(yObj.ver[0].recs).e)+" kg":"not issued"}</b><div class="mono small" style="word-break:break-all">${nv?yObj.ver[0].hash.slice(0,32)+"…":"-"}</div>${nv>1?`<span class="tag late">SUPERSEDED, KEPT</span>`:""}</div>
+      <div class="node ${nv>1?"on":""}"><small>v2 · restated revision</small><br><b>${nv>1?fmt(tot(yObj.ver[1].recs).e)+" kg":"none yet"}</b><div class="mono small" style="word-break:break-all">${nv>1?yObj.ver[1].hash.slice(0,32)+"…":"-"}</div>${nv>1?`<span class="tag">PARENT v1</span>`:""}</div>
+      <div class="node"><small>Next accounting period</small><br><b>Isolated timeline</b><div class="small">Maintains strict yearly cut-off</div></div>
+    </div>
+  </div>`;
+};
+
+const cert=()=>{
+  const yObj=getY(),v=yObj.ver.find(x=>"v"+x.n===S.sel)||(yObj.ver.length?yObj.ver[yObj.ver.length-1]:null);
+  const rs=v?v.recs:[...yObj.rec,...yObj.late],T=tot(rs);
+  return `<div class="card cert">
+    <div class="row"><span class="small mono">CARBONLEDGER · GHG INVENTORY · FY${S.year}</span><span class="sp"></span><span class="tag">${v?`VERSION ${v.n} · ${yObj.ver.length>v.n?"SUPERSEDED":"CURRENT"}`:"DRAFT, PERIOD NOT CLOSED"}</span></div>
+    <h2>GHG Emissions Inventory and Compliance Certificate</h2>
+    <p class="small" style="margin:0 0 16px">Prepared for the customer's supplier decarbonisation portal. Period FY${S.year}, Pair CL-${S.year}.1, nine plants.</p>
+    <table>
+      <thead><tr><th>Scope</th><th>Basis</th><th class="num">kgCO₂e</th></tr></thead>
+      <tbody>
+        ${[[1,"Direct combustion"],[2,"Purchased electricity"],[3,"Logistics and supplier declarations"]].map(([s,n])=>`<tr><td>${sc(s)} Scope ${s}</td><td>${n}</td><td class="num">${fmt(T.sc[s]||0)}</td></tr>`).join("")}
+        <tr><td colspan="2"><b>Total</b></td><td class="num"><b>${fmt(T.e)}</b></td></tr>
+      </tbody>
+    </table>
+    <div class="grid g2" style="margin:16px 0">
+      <div class="card" style="background:var(--paper)"><small class="small">U(rss), independent errors</small><div class="mono" style="font-size:16px;font-weight:700">± ${fmt(T.rss)} (${fmt(T.rss/(T.e||1)*100,1)}%)</div></div>
+      <div class="card" style="background:var(--paper)"><small class="small">U(lin), worst case</small><div class="mono" style="font-size:16px;font-weight:700">± ${fmt(T.lin)} (${fmt(T.lin/(T.e||1)*100,1)}%)</div></div>
+    </div>
+    <div class="hash seal"><b>SHA-256</b><br>${v?v.hash:"Issued when the period is closed and signed"}</div>
+    <div class="row noprint" style="margin-top:14px">
+      <button class="btn ghost" onclick="print()">Print</button>
+      <button class="btn ghost" data-act="json">Export JSON</button>
+      <button class="btn amb" data-act="send" ${v?"":"disabled"}>Send to customer portal</button>
+    </div>
+  </div>`;
+};
+
+V.reports=()=>{
+  const yObj=getY(),versions=yObj.ver.map(v=>"v"+v.n);
+  if(!versions.length)versions.push("draft");
+  return `<div class="row noprint" style="margin-bottom:14px">
+    <span class="small">Version for FY${S.year}:</span>
+    <div class="pill">
+      ${versions.map(k=>`<button data-act="sel" data-v="${k}" class="${S.sel===k||(k==="draft"&&!yObj.ver.length)?"on":""}">${k}</button>`).join("")}
+    </div>
+  </div>${cert()}`;
+};
+
+V.verify=()=>{
+  const yObj=getY(),v=yObj.ver.find(x=>"v"+x.n===S.sel)||yObj.ver[yObj.ver.length-1];
+  if(!v)return `<div class="card" style="text-align:center;padding:50px"><h3>Nothing to verify yet for FY${S.year}</h3><p class="small">Close the period or issue a certified version first.</p><button class="btn" data-act="go" data-v="stepper">Open Document Stepper</button></div>`;
+  return `<div class="grid g2">
+    <div class="card">
+      <div class="row"><h3 style="margin:0">carbonledger verify</h3><span class="sp"></span><label class="row small"><input type="checkbox" id="tmp" ${S.tamper?"checked":""}>Simulate 1-byte tamper</label></div>
+      <div class="term" id="term"><span class="d">$ carbonledger verify R-T${S.year}-A --version v${v.n} --pair CL-${S.year}.1</span><br>Ready. Press the button to verify cryptographic reproducibility.</div>
+      <div class="row" style="margin-top:12px"><button class="btn amb" data-act="verify" data-v="${v.n}">Recompute and verify</button></div>
+    </div>
+    <div class="card">
+      <h3>Stored hash (v${v.n})</h3><div class="hash">${v.hash}</div>
+      <h3 style="margin-top:16px">Recomputed hash</h3><div class="hash" id="rc">press verify</div>
+      <p class="small">Same Pair, same pinned inputs, same bytes: identical SHA-256 hash. A single modified byte invalidates the ledger.</p>
+    </div>
+  </div>`;
+};
+
+V.dq=()=>{
+  const yObj=getY(),allRecs=yObj.ver.length?yObj.ver[yObj.ver.length-1].recs:[...yObj.rec,...yObj.late],T=tot(allRecs);
+  const m=(T.ti.metered||0)/(T.e||1),i=(T.ti.invoiced||0)/(T.e||1),e0=(T.ti.estimated||0)/(T.e||1),fr=[1,.6,.3,.1],U=k=>{const g=e0*(1-fr[k]);return(m+g*.26)*2+(i+g*.74)*8+e0*fr[k]*25};
+  return `<div class="grid g4" style="margin-bottom:16px">
+    ${fr.map((f,k)=>`<div class="card kpi"><small>${k?"Cycle "+k:"Baseline"} target</small><b>${fmt(e0*f*100,1)}%</b><span>estimated share · weighted U(lin) ${fmt(U(k),2)}%</span></div>`).join("")}
+  </div>
+  <div class="card">
+    <h3>Per-plant starting point · FY${S.year}</h3>
+    <table><thead><tr><th>Plant</th><th class="num">Emissions</th><th>Dominant tier</th><th>Next move</th></tr></thead>
+    <tbody>${PL.map(([k,n])=>{const rs=allRecs.filter(r=>r.plant===k),t=tot(rs),top=rs.length?Object.entries(t.ti).sort((a,b)=>b[1]-a[1])[0][0]:"-";return `<tr><td><b>${k}</b> ${n}</td><td class="num">${fmt(t.e,0)} kg</td><td>${top==="-"?"-":tH(top)}</td><td>${top==="estimated"?"Collect the supplier invoice first":top==="invoiced"?"Add a sub-meter where the load is large":rs.length?"Maintain calibrated metering":"Start data intake"}</td></tr>`}).join("")}</tbody></table>
+  </div>`;
+};
+
+async function doVerify(n){
+  const yObj=getY(),v=yObj.ver.find(x=>x.n===n),t=$("#term");
+  const L=[`Loading pinned Pair CL-${S.year}.1 …`,"Pinning reference release and input cut-off …",`Recomputing ${v.recs.length} lines in decimal …`,"Serialising canonical bytes …","Hashing with SHA-256 …"];
+  S.tamper=$("#tmp").checked;
+  t.innerHTML=`<span class="d">$ carbonledger verify R-T${S.year}-A --version v${v.n}</span><br>`;
+  for(const l of L){t.innerHTML+=`<span class="ok">✓</span> ${l}<br>`;await new Promise(r=>setTimeout(r,240))}
+  const h=await sha(canon(v.recs,S.tamper,S.year)),ok=h===v.hash;
+  t.innerHTML+=ok?`<br><span class="ok">PASS: byte-for-byte identical</span>`:`<br><span class="bad">FAIL: report not reproduced, inputs differ from the sealed record</span>`;
+  $("#rc").textContent=h;$("#rc").className="hash"+(ok?"":" bad");
+}
+
+const act={
+  go:e=>{S.tab=e.dataset.v;render();},
+  sel:e=>{S.sel=e.dataset.v;render();},
+  setStep:e=>{S.step=+e.dataset.step;render();},
+  selectYear:e=>{S.year=e.dataset.y;S.step=2;render();},
+  addNewYear:()=>{
+    const inp=$("#inpNewYear"),yr=inp?inp.value.trim():"";
+    if(!yr||isNaN(yr)||yr.length!==4)return toast("Please enter a valid 4-digit year (e.g. 2026).");
+    if(S.years[yr]){S.year=yr;S.step=2;toast(`Switched to FY${yr}.`);return render();}
+    S.years[yr]={year:yr,state:"OPEN",closedAt:null,rec:[],late:[],revisionActive:false,ver:[]};
+    S.year=yr;S.step=2;toast(`Registered and opened FY${yr}.`);render();
+  },
+  branchRevision:()=>{
+    const yObj=getY();yObj.revisionActive=true;
+    toast(`Branch created: FY${S.year} Revision Ledger (v${yObj.ver.length+1}).`);render();
+  },
+  cancelRevision:()=>{
+    const yObj=getY();yObj.revisionActive=false;
+    toast(`Revision ledger closed.`);render();
+  },
+  quickClose:async()=>{
+    const yObj=getY();yObj.state="CLOSED";yObj.closedAt=new Date().toISOString().slice(0,16).replace("T"," ");
+    const recs=yObj.rec.map(r=>({...r}));
+    const h=await sha(canon(recs,false,S.year));
+    yObj.ver=[{n:1,recs,hash:h,date:yObj.closedAt,note:"Baseline seal"}];
+    yObj.revisionActive=false;S.sel="v1";toast(`FY${S.year} closed and sealed (v1).`);render();
+  },
+  addStepperDoc:()=>{
+    const yObj=getY();
+    const docId=$("#sfDoc").value.trim()||`DOC-${S.year}-${Date.now().toString().slice(-4)}`;
+    const plant=$("#sfPlant").value,type=$("#sfType").value,qty=+$("#sfQty").value,date=$("#sfDate").value,tier=$("#sfTier").value;
+    if(!(qty>0)||!date)return toast("Please enter a valid quantity and date.");
+    if(S.role==="officer"&&plant!=="P1")return toast("Plant Data Officer can only add records for P1.");
+
+    const r={id:`REC-${S.year}-${String(yObj.rec.length+yObj.late.length+1).padStart(3,"0")}`,doc:docId,plant,type,qty,tier,date};
+    if(yObj.state==="CLOSED"&&yObj.revisionActive){
+      r.id=`REV-${S.year}-${String(yObj.late.length+1).padStart(3,"0")}`;
+      yObj.late.push(r);
+      toast(`Document attached to FY${S.year} Revision Ledger.`);
+    }else if(yObj.state==="CLOSED"&&!yObj.revisionActive){
+      return toast(`FY${S.year} is closed! Please branch a revision ledger in Step 2 first.`);
+    }else{
+      yObj.rec.push(r);
+      toast(`Document attached to FY${S.year} Active Ledger.`);
+    }
+    V.stepperForm=null;
+    lg(`Document ${docId} stored in FY${S.year}`);
+    render();
+  },
+  sealRevision:async()=>{
+    const yObj=getY();
+    if(!yObj.late.length)return toast("No late records in revision ledger to seal.");
+    const baseRecs=yObj.ver.length?yObj.ver[yObj.ver.length-1].recs:yObj.rec;
+    const newRecs=[...baseRecs,...yObj.late.map(r=>({...r}))];
+    const newVer=yObj.ver.length+1;
+    const h=await sha(canon(newRecs,false,S.year));
+    yObj.ver.push({n:newVer,recs:newRecs,hash:h,date:new Date().toISOString().slice(0,16).replace("T"," "),note:`Restated revision v${newVer}`});
+    yObj.late=[];yObj.revisionActive=false;S.sel="v"+newVer;
+    toast(`FY${S.year}-v${newVer} sealed with SHA-256 and issued.`);render();
+  },
+  sealBaseline:async()=>{
+    const yObj=getY();
+    if(!yObj.rec.length)return toast("Cannot seal empty ledger.");
+    yObj.state="CLOSED";yObj.closedAt=new Date().toISOString().slice(0,16).replace("T"," ");
+    const recs=yObj.rec.map(r=>({...r}));
+    const h=await sha(canon(recs,false,S.year));
+    yObj.ver=[{n:1,recs,hash:h,date:yObj.closedAt,note:"Baseline seal"}];
+    S.sel="v1";toast(`FY${S.year} closed and sealed (v1).`);render();
+  },
+  exportYearJson:()=>{
+    const yObj=getY(),v=yObj.ver.find(x=>"v"+x.n===S.sel)||(yObj.ver.length?yObj.ver[yObj.ver.length-1]:null);
+    const recs=v?v.recs:[...yObj.rec,...yObj.late],T=tot(recs);
+    const data={period:"FY"+S.year,pair:`CL-${S.year}.1`,version:v?"v"+v.n:"draft",status:yObj.state,total_kgco2e:T.e,u_rss_kg:T.rss,u_lin_kg:T.lin,sha256_seal:v?v.hash:null,parent_hash:v&&v.n>1?yObj.ver[0].hash:null,records:recs};
+    const a=document.createElement("a");
+    a.href="data:application/json,"+encodeURIComponent(JSON.stringify(data,null,2));
+    a.download=`carbonledger_${S.year}_${v?'v'+v.n:'draft'}.json`;a.click();
+  },
+  add:()=>{
+    const yObj=getY(),f=V.f||{};
+    const r={id:"",plant:$("#fp").value,type:$("#ft").value,qty:+$("#fq").value,date:$("#fd").value,tier:$("#fe").value,doc:`DOC-${S.year}-${Date.now().toString().slice(-4)}`};
+    if(!(r.qty>0)||!r.date)return toast("Enter a quantity and a date.");
+    if(S.role==="officer"&&r.plant!=="P1")return toast("A Plant Data Officer can only add records for P1.");
+    if(yObj.state==="CLOSING")return toast("The period is closing. Back to open to add records.");
+
+    if(yObj.state==="CLOSED"){
+      if(yObj.revisionActive){
+        r.id=`REV-${S.year}-`+String(yObj.late.length+1).padStart(3,"0");
+        yObj.late.push(r);
+        toast(`Stored in FY${S.year} revision ledger.`);
+      }else{
+        r.id=`LATE-${S.year}-`+String(yObj.late.length+1).padStart(3,"0");
+        yObj.late.unshift(r);
+        toast(`Stored as late record for FY${S.year}.`);
+      }
+    }else{
+      r.id=`REC-${S.year}-`+String(yObj.rec.length+1).padStart(3,"0");
+      yObj.rec.push(r);
+      toast("Record appended.");
+    }
+    lg("Record "+r.id+" stored");V.f=null;render();
+  },
+  closing:()=>{getY().state="CLOSING";render();},
+  reopen:()=>{getY().state="OPEN";render();},
+  approve:async()=>{
+    const yObj=getY();yObj.state="CLOSED";yObj.closedAt=new Date().toISOString().slice(0,16).replace("T"," ");
+    const recs=yObj.rec.map(r=>({...r}));
+    const h=await sha(canon(recs,false,S.year));
+    yObj.ver=[{n:1,recs,hash:h,date:yObj.closedAt,note:"Approved close"}];
+    S.sel="v1";toast(`Period FY${S.year} closed. v1 issued and sealed.`);render();
+  },
+  sim:()=>{
+    const yObj=getY();
+    yObj.late.unshift({id:`LATE-${S.year}-`+String(yObj.late.length+1).padStart(3,"0"),doc:`INV-${S.year}-LATE-DSL`,plant:"P3",type:"DIESEL",qty:1000,tier:"invoiced",date:`${S.year}-12-20`});
+    toast(`Late invoice stored for FY${S.year}. Baseline hash unchanged.`);render();
+  },
+  v2:async()=>{
+    const yObj=getY(),base=yObj.ver.length?yObj.ver[0].recs:yObj.rec;
+    const recs=[...base,...yObj.late.map(r=>({...r}))];
+    const n=yObj.ver.length+1,h=await sha(canon(recs,false,S.year));
+    yObj.ver.push({n,recs,hash:h,date:new Date().toISOString().slice(0,16).replace("T"," "),note:`Restated v${n}`});
+    yObj.late=[];yObj.revisionActive=false;S.sel="v"+n;
+    toast(`Restated version v${n} issued. Baseline v1 is preserved.`);render();
+  },
+  json:()=>{act.exportYearJson();},
+  send:()=>toast("Sent to the customer portal (demo, certified payload delivered)."),
+  verify:e=>doVerify(+e.dataset.v)
+};
+
+document.addEventListener("click",e=>{
+  const a=e.target.closest("[data-act]");
+  if(a&&act[a.dataset.act])act[a.dataset.act](a);
+  const t=e.target.closest("[data-tab]");
+  if(t){S.tab=t.dataset.tab;render();}
+});
+
+document.addEventListener("input",e=>{
+  if(["sfDoc","sfPlant","sfType","sfQty","sfDate","sfTier"].includes(e.target.id)){
+    V.stepperForm={doc:$("#sfDoc").value,plant:$("#sfPlant").value,type:$("#sfType").value,qty:+$("#sfQty").value||0,date:$("#sfDate").value,tier:$("#sfTier").value};
+    const id=e.target.id;render();
+    const el=$("#"+id);
+    if(el&&el.type!=="date"&&el.tagName==="INPUT"){el.focus();try{el.setSelectionRange(999,999)}catch(x){}}
+  }
+  if(["fp","ft","fq","fd","fe"].includes(e.target.id)){
+    V.f={plant:$("#fp").value,type:$("#ft").value,qty:+$("#fq").value||0,date:$("#fd").value,ev:$("#fe").value};
+    const id=e.target.id;render();
+    const el=$("#"+id);
+    if(el&&el.type!=="date"){el.focus();try{el.setSelectionRange(999,999)}catch(x){}}
+  }
+});
+
+document.addEventListener("change",e=>{
+  if(e.target.id==="role"){S.role=e.target.value;render();}
+  if(e.target.id==="topYear"){S.year=e.target.value;render();}
+  if(e.target.id==="tmp"){S.tamper=e.target.checked;}
+});
+
+function render(){
+  const yObj=getY(),cur=yObj.state==="OPEN"?"open":yObj.state==="CLOSED"?"closed":"";
+  $("#top").innerHTML=`
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 26 26"><rect x="2" y="3" width="22" height="20" rx="4" fill="none" stroke="#E39B2D" stroke-width="2"/><path d="M7 9h12M7 13h12M7 17h7" stroke="#F3DDE3" stroke-width="2" stroke-linecap="round"/></svg>
+      CarbonLedger
+    </div>
+    <span class="chipx">Pair CL-${S.year}.1</span>
+    <span class="chipx"><i class="dot ${cur}"></i>FY${S.year} · ${yObj.state}</span>
+    <div class="row" style="gap:6px">
+      <span class="small" style="color:#F3DDE3">Active Year:</span>
+      <select id="topYear">
+        ${Object.keys(S.years).sort().map(y=>`<option value="${y}" ${y===S.year?'selected':''}>FY${y} (${S.years[y].state})</option>`).join("")}
+      </select>
+    </div>
+    <span class="sp"></span>
+    <span class="small" style="color:#F3DDE3">Role</span>
+    <select id="role">${Object.entries(ROLES).map(([k,v])=>`<option value="${k}" ${k===S.role?"selected":""}>${v[0]}</option>`).join("")}</select>
+  `;
+  $("#tabs").innerHTML=TABS.map(([k,n])=>`<a data-tab="${k}" class="${S.tab===k?"on":""}">${n}</a>`).join("");
+  $("#view").innerHTML=`<h1 class="ttl">${HEAD[S.tab][0]}</h1><p class="lead">${HEAD[S.tab][1]}</p>`+V[S.tab]();
+}
+
+async function init(){
+  for(const yr of Object.keys(S.years)){
+    const yObj=S.years[yr];
+    if(yObj.state==="CLOSED"&&yObj.ver.length===0){
+      const recs=yObj.rec.map(r=>({...r}));
+      const hash=await sha(canon(recs,false,yr));
+      yObj.ver=[{n:1,recs,hash,date:yObj.closedAt||`${yr}-12-31 23:59`,note:"Baseline seal"}];
+    }
+  }
+  render();
+}
+
+init();
+</script></body></html>
