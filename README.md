@@ -102,9 +102,9 @@ open index.html
 ---
 
 ## 📜 Academic Reference
-- **Name:**: Rohan Vashisht
-- **Cohort:**: Jensen Huang
-- **Roll No:**: 150096724132
+- **Name:** Rohan Vashisht
+- **Cohort:** Jensen Huang
+- **Roll No:** 150096724132
 - **Course:** B.Tech Computer Science & Engineering (2024-2028)
 - **Subject:** Software Engineering & Project Management (Semester V)
 - **Problem Statement:** Case Study No. 38 - CarbonLedger
